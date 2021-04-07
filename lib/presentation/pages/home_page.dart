@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_playstore/data/entities/entities.dart';
 import 'package:flutter_playstore/logic/blocs/blocs.dart';
+import 'package:flutter_playstore/logic/blocs/home/home_bloc.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,9 +18,36 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             SearchField(),
-            TrendingSection(),
-            RecommendSection(),
-            CategorySection(),
+            BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                if (state is HomeLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is HomeFailure) {
+                  return Center(
+                    child: Text(state.message),
+                  );
+                } else if (state is HomeSuccess) {
+                  return ListView.builder(
+                    itemCount: state.baseEntities.length,
+                    itemBuilder: (context, index) {
+                      if (state.baseEntities[index] is CategoryEntity) {
+                        return CategorySection();
+                      } else if (state.baseEntities[index] is TrendEntity) {
+                        return TrendingSection();
+                      } else if (state.baseEntities[index] is RecommendEntity) {
+                        return RecommendSection();
+                      } else {
+                        return Container();
+                      }
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -107,102 +136,108 @@ class TrendingSection extends StatelessWidget {
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: state.trendEntity.trendList.length,
                   shrinkWrap: true,
-                  itemBuilder: (context, index) => Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.74,
-                          child: AspectRatio(
-                            aspectRatio: 1.7,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                state.trendEntity.trendList[index].preview,
-                                fit: BoxFit.cover,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.74,
+                            child: AspectRatio(
+                              aspectRatio: 1.7,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  state
+                                      .trendEntity.trendEntities[index].preview,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          child: Row(
-                            children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.width * 0.12,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.black.withOpacity(0.5),
-                                      width: 0.5),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: AspectRatio(
-                                  aspectRatio: 1,
-                                  child: ClipRRect(
+                          SizedBox(height: 10),
+                          Container(
+                            child: Row(
+                              children: [
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.12,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black.withOpacity(0.5),
+                                        width: 0.5),
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      state.trendEntity.trendList[index].icon,
-                                      fit: BoxFit.cover,
+                                  ),
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        state.trendEntity.trendEntities[index]
+                                            .icon,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    state.trendEntity.trendList[index].name,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      state.trendEntity.trendEntities[index]
+                                          .name,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        state.trendEntity.trendList[index].size,
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14,
+                                    SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          state.trendEntity.trendEntities[index]
+                                              .size,
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        state.trendEntity.trendList[index].rate
-                                            .toString(),
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14,
+                                        SizedBox(width: 5),
+                                        Text(
+                                          state.trendEntity.trendEntities[index]
+                                              .rate
+                                              .toString(),
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.grey,
-                                        size: 18,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
+                                        SizedBox(
+                                          width: 4,
+                                        ),
+                                        Icon(
+                                          Icons.star,
+                                          color: Colors.grey,
+                                          size: 18,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               );
             } else {
@@ -260,7 +295,7 @@ class RecommendSection extends StatelessWidget {
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: state.recommendEntity.recommendList.length,
+                  itemCount: state.recommendEntity.recommendEntities.length,
                   itemBuilder: (context, index) => Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -268,12 +303,12 @@ class RecommendSection extends StatelessWidget {
                         CircleAvatar(
                           radius: MediaQuery.of(context).size.width * 0.1,
                           backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(
-                              state.recommendEntity.recommendList[index].icon),
+                          backgroundImage: NetworkImage(state
+                              .recommendEntity.recommendEntities[index].icon),
                         ),
                         SizedBox(height: 10),
                         Text(
-                          state.recommendEntity.recommendList[index].name,
+                          state.recommendEntity.recommendEntities[index].name,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
@@ -285,7 +320,8 @@ class RecommendSection extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                state.recommendEntity.recommendList[index].rate
+                                state.recommendEntity.recommendEntities[index]
+                                    .rate
                                     .toString(),
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 12),
@@ -361,7 +397,7 @@ class CategorySection extends StatelessWidget {
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemCount: state.categoryEntity.categoryList.length,
+                  itemCount: state.categoryEntity.categoryEntities.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) => Container(
                     margin: EdgeInsets.symmetric(horizontal: 10),
@@ -380,7 +416,7 @@ class CategorySection extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: state.categoryEntity
-                                          .categoryList[index].bgColor,
+                                          .categoryEntities[index].bgColor,
                                     ),
                                   ),
                                 ),
@@ -395,17 +431,19 @@ class CategorySection extends StatelessWidget {
                                       children: [
                                         Icon(
                                           state.categoryEntity
-                                              .categoryList[index].icon,
-                                          color: state.categoryEntity
-                                              .categoryList[index].accentColor,
+                                              .categoryEntities[index].icon,
+                                          color: state
+                                              .categoryEntity
+                                              .categoryEntities[index]
+                                              .accentColor,
                                         ),
                                         Text(
                                           state.categoryEntity
-                                              .categoryList[index].category,
+                                              .categoryEntities[index].category,
                                           style: TextStyle(
                                             color: state
                                                 .categoryEntity
-                                                .categoryList[index]
+                                                .categoryEntities[index]
                                                 .accentColor,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,

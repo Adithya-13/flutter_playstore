@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_playstore/data/repositories/repositories.dart';
 import 'package:flutter_playstore/logic/blocs/blocs.dart';
+import 'package:flutter_playstore/logic/blocs/home/home_bloc.dart';
 import 'package:flutter_playstore/presentation/pages/base_page.dart';
 
 void main() {
@@ -35,6 +36,13 @@ void main() {
               categoryRepository: context.read<CategoryRepository>())
             ..add(CategoryFetched()),
         ),
+        BlocProvider<HomeBloc>(
+          create: (context) => HomeBloc(
+            categoryBloc: context.read<CategoryBloc>(),
+            recommendBloc: context.read<RecommendBloc>(),
+            trendBloc: context.read<TrendBloc>(),
+          ),
+        )
       ],
       child: MyApp(),
     ),

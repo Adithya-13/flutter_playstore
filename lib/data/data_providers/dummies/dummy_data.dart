@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_playstore/data/entities/entities.dart';
 
 class DummyData {
-  static TrendEntity getTrendList() => TrendEntity(trendList: [
+  static TrendEntity getTrendList() => TrendEntity(trendEntities: [
         TrendItemEntity(
             preview:
                 "https://play-lh.googleusercontent.com/aok0HKaMtZIgEfqV4yw64GZ4SUslxMRhjjqtNdF_kITm5n2j3YGbKILmcIQ8ctvqEeOV",
@@ -46,41 +46,40 @@ class DummyData {
             rate: 4.7),
       ]);
 
-  static RecommendEntity getRecommendList() => RecommendEntity(
-        recommendList: [
-          RecommendItemEntity(
-            name: "Netflix",
-            icon:
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Netflix_icon.svg/1200px-Netflix_icon.svg.png",
-            rate: 4.8,
-          ),
-          RecommendItemEntity(
-            name: "Facebook",
-            icon: "https://image.flaticon.com/icons/png/512/174/174848.png",
-            rate: 4.8,
-          ),
-          RecommendItemEntity(
-            name: "Instagram",
-            icon:
-                "https://www.freepnglogos.com/uploads/logo-ig-png/logo-ig-logo-instagram-ini-ada-varias-dan-transparan-33.png",
-            rate: 4.8,
-          ),
-          RecommendItemEntity(
-            name: "Gojek",
-            icon:
-                "https://pbs.twimg.com/profile_images/1153975468812406785/ONvxKr_G_400x400.jpg",
-            rate: 4.8,
-          ),
-          RecommendItemEntity(
-            name: "Tokopedia",
-            icon:
-                "https://toppng.com/uploads/preview/tokopedia-logo-icon-tokopedia-115638033660bhcr3nbcq.png",
-            rate: 4.8,
-          ),
-        ],
-      );
+  static RecommendEntity getRecommendList() =>
+      RecommendEntity(recommendEntities: [
+        RecommendItemEntity(
+          name: "Netflix",
+          icon:
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Netflix_icon.svg/1200px-Netflix_icon.svg.png",
+          rate: 4.8,
+        ),
+        RecommendItemEntity(
+          name: "Facebook",
+          icon: "https://image.flaticon.com/icons/png/512/174/174848.png",
+          rate: 4.8,
+        ),
+        RecommendItemEntity(
+          name: "Instagram",
+          icon:
+              "https://www.freepnglogos.com/uploads/logo-ig-png/logo-ig-logo-instagram-ini-ada-varias-dan-transparan-33.png",
+          rate: 4.8,
+        ),
+        RecommendItemEntity(
+          name: "Gojek",
+          icon:
+              "https://pbs.twimg.com/profile_images/1153975468812406785/ONvxKr_G_400x400.jpg",
+          rate: 4.8,
+        ),
+        RecommendItemEntity(
+          name: "Tokopedia",
+          icon:
+              "https://toppng.com/uploads/preview/tokopedia-logo-icon-tokopedia-115638033660bhcr3nbcq.png",
+          rate: 4.8,
+        ),
+      ]);
 
-  static CategoryEntity getCategoryList() => CategoryEntity(categoryList: [
+  static CategoryEntity getCategoryList() => CategoryEntity(categoryEntities: [
         CategoryItemEntity(
           category: "Music",
           icon: Icons.music_note,

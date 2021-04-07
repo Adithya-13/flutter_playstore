@@ -29,9 +29,9 @@ class RecommendBloc extends Bloc<RecommendEvent, RecommendState> {
       RecommendFetched event) async* {
     yield RecommendLoading();
     try {
-      RecommendEntity trendEntity =
+      RecommendEntity recommendEntity =
           await _recommendRepository.getRecommendList();
-      yield RecommendSuccess(recommendEntity: trendEntity);
+      yield RecommendSuccess(recommendEntity: recommendEntity);
     } catch (e) {
       yield RecommendFailure(message: e.toString());
     }
