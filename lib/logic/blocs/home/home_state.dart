@@ -7,7 +7,7 @@ abstract class HomeState extends Equatable {
   List<Object> get props => [];
 }
 
-class HomeLoading extends HomeState {}
+class HomeInitial extends HomeState {}
 
 class HomeFailure extends HomeState {
   final String message;
@@ -19,7 +19,14 @@ class HomeFailure extends HomeState {
 }
 
 class HomeSuccess extends HomeState {
-  final List<BaseEntity> baseEntities;
+  final List<BaseEntity>? baseEntities;
+  final bool? hasReachedMax;
 
-  HomeSuccess({required this.baseEntities});
+  HomeSuccess({this.baseEntities, this.hasReachedMax});
+
+  HomeSuccess copyWith({List<BaseEntity>? baseEntities, bool? hasReachedMax}) {
+    return HomeSuccess(
+        baseEntities: baseEntities ?? this.baseEntities,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax);
+  }
 }

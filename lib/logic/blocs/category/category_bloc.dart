@@ -27,7 +27,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   Stream<CategoryState> _mapCategoryFetchedToState(
       CategoryFetched event) async* {
-    yield CategoryLoading();
+    // yield CategoryLoading();
     try {
       CategoryEntity categoryEntity =
           await _categoryRepository.getCategoryList();

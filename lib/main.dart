@@ -23,25 +23,22 @@ void main() {
       providers: [
         BlocProvider<TrendBloc>(
           create: (context) =>
-              TrendBloc(trendRepository: context.read<TrendRepository>())
-                ..add(TrendFetched()),
+              TrendBloc(trendRepository: context.read<TrendRepository>()),
         ),
         BlocProvider<RecommendBloc>(
           create: (context) => RecommendBloc(
-              recommendRepository: context.read<RecommendRepository>())
-            ..add(RecommendFetched()),
+              recommendRepository: context.read<RecommendRepository>()),
         ),
         BlocProvider<CategoryBloc>(
           create: (context) => CategoryBloc(
-              categoryRepository: context.read<CategoryRepository>())
-            ..add(CategoryFetched()),
+              categoryRepository: context.read<CategoryRepository>()),
         ),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(
             categoryBloc: context.read<CategoryBloc>(),
             recommendBloc: context.read<RecommendBloc>(),
             trendBloc: context.read<TrendBloc>(),
-          ),
+          )..add(HomeFetched()),
         )
       ],
       child: MyApp(),

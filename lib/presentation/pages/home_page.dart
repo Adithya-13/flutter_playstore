@@ -10,17 +10,42 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 200.0;
+
+  @override
+  void initState() {
+    _scrollController.addListener(_onScroll);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      context.read<HomeBloc>().add(HomeFetched());
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: SafeArea(
+    return SafeArea(
+      child: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             SearchField(),
             BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
-                if (state is HomeLoading) {
+                if (state is HomeInitial) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
@@ -29,19 +54,34 @@ class _HomePageState extends State<HomePage> {
                     child: Text(state.message),
                   );
                 } else if (state is HomeSuccess) {
-                  return ListView.builder(
-                    itemCount: state.baseEntities.length,
-                    itemBuilder: (context, index) {
-                      if (state.baseEntities[index] is CategoryEntity) {
-                        return CategorySection();
-                      } else if (state.baseEntities[index] is TrendEntity) {
-                        return TrendingSection();
-                      } else if (state.baseEntities[index] is RecommendEntity) {
-                        return RecommendSection();
-                      } else {
-                        return Container();
-                      }
-                    },
+                  if (state.baseEntities!.isEmpty) {
+                    return Center(
+                      child: Text('no app'),
+                    );
+                  }
+                  return Container(
+                    child: ListView.builder(
+                      itemCount: state.hasReachedMax!
+                          ? state.baseEntities!.length
+                          : state.baseEntities!.length + 1,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        if (index >= state.baseEntities!.length) {
+                          return BottomLoader();
+                        } else if (state.baseEntities![index]
+                            is CategoryEntity) {
+                          return CategorySection();
+                        } else if (state.baseEntities![index] is TrendEntity) {
+                          return TrendingSection();
+                        } else if (state.baseEntities![index]
+                            is RecommendEntity) {
+                          return RecommendSection();
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
                   );
                 } else {
                   return Container();
@@ -49,6 +89,24 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class BottomLoader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: Center(
+        child: SizedBox(
+          width: 33,
+          height: 33,
+          child: CircularProgressIndicator(
+            strokeWidth: 1.5,
+          ),
         ),
       ),
     );
@@ -137,6 +195,7 @@ class TrendingSection extends StatelessWidget {
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
+                  itemCount: state.trendEntity.trendEntities.length,
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.symmetric(horizontal: 10),

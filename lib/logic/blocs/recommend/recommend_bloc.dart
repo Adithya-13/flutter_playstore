@@ -27,7 +27,7 @@ class RecommendBloc extends Bloc<RecommendEvent, RecommendState> {
 
   Stream<RecommendState> _mapRecommendFetchedToState(
       RecommendFetched event) async* {
-    yield RecommendLoading();
+    // yield RecommendLoading();
     try {
       RecommendEntity recommendEntity =
           await _recommendRepository.getRecommendList();

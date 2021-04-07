@@ -26,7 +26,7 @@ class TrendBloc extends Bloc<TrendEvent, TrendState> {
   }
 
   Stream<TrendState> _mapTrendFetchedToState(TrendFetched event) async* {
-    yield TrendLoading();
+    // yield TrendLoading();
     try {
       TrendEntity trendEntity = await _trendRepository.getTrendList();
       yield TrendSuccess(trendEntity: trendEntity);

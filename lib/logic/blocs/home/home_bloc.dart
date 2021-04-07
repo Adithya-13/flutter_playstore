@@ -18,30 +18,80 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       {required this.categoryBloc,
       required this.recommendBloc,
       required this.trendBloc})
-      : super(HomeLoading());
+      : super(HomeInitial());
 
-  bool isFetching = false;
+  List<BaseEntity> baseEntities = List<BaseEntity>.empty(growable: true);
 
   @override
   Stream<HomeState> mapEventToState(
     HomeEvent event,
   ) async* {
-    if (event is HomeFetched) {
-      _mapHomeFetchedToState(event, state);
+    if (event is HomeFetched && !_hasReachedMax(state)) {
+      yield* _mapHomeFetchedToState(event, state);
     }
   }
 
   Stream<HomeState> _mapHomeFetchedToState(
       HomeEvent event, HomeState state) async* {
-    yield HomeLoading();
     try {
-      categoryBloc.add(CategoryFetched());
-      recommendBloc.add(RecommendFetched());
-      trendBloc.add(TrendFetched());
-      categoryBloc.add(CategoryFetched());
-      yield HomeSuccess(baseEntities: []);
+      if (state is HomeInitial) {
+        await Future.delayed(Duration(seconds: 5));
+
+        trendBloc.add(TrendFetched());
+        recommendBloc.add(RecommendFetched());
+        categoryBloc.add(CategoryFetched());
+
+        categoryBloc.stream.listen((event) {
+          if (event is CategorySuccess) {
+            baseEntities.add(event.categoryEntity);
+          }
+        });
+
+        recommendBloc.stream.listen((event) {
+          if (event is RecommendSuccess) {
+            baseEntities.add(event.recommendEntity);
+          }
+        });
+
+        trendBloc.stream.listen((event) {
+          if (event is TrendSuccess) {
+            baseEntities.add(event.trendEntity);
+          }
+        });
+        yield HomeSuccess(baseEntities: baseEntities, hasReachedMax: false);
+      } else if (state is HomeSuccess) {
+        await Future.delayed(Duration(seconds: 5));
+
+        trendBloc.add(TrendFetched());
+        recommendBloc.add(RecommendFetched());
+        categoryBloc.add(CategoryFetched());
+
+        categoryBloc.stream.listen((event) {
+          if (event is CategorySuccess) {
+            baseEntities.add(event.categoryEntity);
+          }
+        });
+
+        recommendBloc.stream.listen((event) {
+          if (event is RecommendSuccess) {
+            baseEntities.add(event.recommendEntity);
+          }
+        });
+
+        trendBloc.stream.listen((event) {
+          if (event is TrendSuccess) {
+            baseEntities.add(event.trendEntity);
+          }
+        });
+        yield baseEntities.isEmpty
+            ? state.copyWith(hasReachedMax: true)
+            : HomeSuccess(baseEntities: state.baseEntities! + baseEntities);
+      }
     } catch (e) {
       yield HomeFailure(message: e.toString());
     }
   }
+
+  bool _hasReachedMax(HomeState state) =>
+      state is HomeSuccess && state.hasReachedMax!;
 }
