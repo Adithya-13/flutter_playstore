@@ -30,29 +30,6 @@ class CategorySection extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Top Categories",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "See all",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            ],
-          ),
-        ),
         BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
             if (state is CategoryLoading) {
