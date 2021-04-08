@@ -29,4 +29,7 @@ class HomeSuccess extends HomeState {
         baseEntities: baseEntities ?? this.baseEntities,
         hasReachedMax: hasReachedMax ?? this.hasReachedMax);
   }
+
+  @override
+  List<Object> get props => [baseEntities!, hasReachedMax!];
 }

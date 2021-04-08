@@ -22,4 +22,8 @@ class CategorySuccess extends CategoryState {
   final CategoryEntity categoryEntity;
 
   CategorySuccess({required this.categoryEntity});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [categoryEntity];
 }

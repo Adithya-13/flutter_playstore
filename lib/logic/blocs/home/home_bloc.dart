@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_playstore/data/entities/entities.dart';
 import 'package:flutter_playstore/logic/blocs/blocs.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'home_event.dart';
 
@@ -23,6 +24,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   List<BaseEntity> baseEntities = List<BaseEntity>.empty(growable: true);
 
   @override
+  Stream<Transition<HomeEvent, HomeState>> transformEvents(
+      Stream<HomeEvent> events, transitionFn) {
+    // TODO: implement transformEvents
+    return super.transformEvents(
+        events.debounceTime(const Duration(milliseconds: 500)), transitionFn);
+  }
+
+  @override
   Stream<HomeState> mapEventToState(
     HomeEvent event,
   ) async* {
@@ -35,57 +44,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       HomeEvent event, HomeState state) async* {
     try {
       if (state is HomeInitial) {
-        await Future.delayed(Duration(seconds: 5));
+        await Future.delayed(Duration(milliseconds: 500));
 
         trendBloc.add(TrendFetched());
         recommendBloc.add(RecommendFetched());
         categoryBloc.add(CategoryFetched());
 
-        categoryBloc.stream.listen((event) {
-          if (event is CategorySuccess) {
-            baseEntities.add(event.categoryEntity);
-          }
-        });
+        listenBloc();
 
-        recommendBloc.stream.listen((event) {
-          if (event is RecommendSuccess) {
-            baseEntities.add(event.recommendEntity);
-          }
-        });
-
-        trendBloc.stream.listen((event) {
-          if (event is TrendSuccess) {
-            baseEntities.add(event.trendEntity);
-          }
-        });
         yield HomeSuccess(baseEntities: baseEntities, hasReachedMax: false);
+        baseEntities.clear();
       } else if (state is HomeSuccess) {
-        await Future.delayed(Duration(seconds: 5));
+        await Future.delayed(Duration(milliseconds: 500));
 
         trendBloc.add(TrendFetched());
         recommendBloc.add(RecommendFetched());
         categoryBloc.add(CategoryFetched());
 
-        categoryBloc.stream.listen((event) {
-          if (event is CategorySuccess) {
-            baseEntities.add(event.categoryEntity);
-          }
-        });
+        listenBloc();
 
-        recommendBloc.stream.listen((event) {
-          if (event is RecommendSuccess) {
-            baseEntities.add(event.recommendEntity);
-          }
-        });
-
-        trendBloc.stream.listen((event) {
-          if (event is TrendSuccess) {
-            baseEntities.add(event.trendEntity);
-          }
-        });
         yield baseEntities.isEmpty
             ? state.copyWith(hasReachedMax: true)
-            : HomeSuccess(baseEntities: state.baseEntities! + baseEntities);
+            : HomeSuccess(
+                baseEntities: state.baseEntities! + baseEntities,
+                hasReachedMax: false,
+              );
+        baseEntities.clear();
       }
     } catch (e) {
       yield HomeFailure(message: e.toString());
@@ -94,4 +78,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   bool _hasReachedMax(HomeState state) =>
       state is HomeSuccess && state.hasReachedMax!;
+
+  void listenBloc() {
+    categoryBloc.stream.listen((event) {
+      if (event is CategorySuccess) {
+        baseEntities.add(event.categoryEntity);
+      }
+    });
+
+    recommendBloc.stream.listen((event) {
+      if (event is RecommendSuccess) {
+        baseEntities.add(event.recommendEntity);
+      }
+    });
+
+    trendBloc.stream.listen((event) {
+      if (event is TrendSuccess) {
+        baseEntities.add(event.trendEntity);
+      }
+    });
+  }
 }
