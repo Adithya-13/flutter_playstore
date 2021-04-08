@@ -1,1 +1,1 @@
-export 'dummies/dummy_data.dart';
+export 'dummies/dummies.dart';

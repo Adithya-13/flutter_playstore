@@ -10,10 +10,10 @@ part 'category_event.dart';
 part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-  final CategoryRepository _categoryRepository;
+  final HomeRepository _homeRepository;
 
-  CategoryBloc({required CategoryRepository categoryRepository})
-      : _categoryRepository = categoryRepository,
+  CategoryBloc({required HomeRepository homeRepository})
+      : _homeRepository = homeRepository,
         super(CategoryLoading());
 
   @override
@@ -29,8 +29,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       CategoryFetched event) async* {
     // yield CategoryLoading();
     try {
-      CategoryEntity categoryEntity =
-          await _categoryRepository.getCategoryList();
+      CategoryEntity categoryEntity = await _homeRepository.getCategoryList();
       yield CategorySuccess(categoryEntity: categoryEntity);
     } catch (e) {
       yield CategoryFailure(message: e.toString());

@@ -2,36 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_playstore/data/repositories/repositories.dart';
 import 'package:flutter_playstore/logic/blocs/blocs.dart';
-import 'package:flutter_playstore/logic/blocs/home/home_bloc.dart';
-import 'package:flutter_playstore/presentation/pages/base_page.dart';
+import 'package:flutter_playstore/presentation/pages/pages.dart';
 
 void main() {
   Bloc.observer = PlayStoreBlocObserver();
   runApp(MultiRepositoryProvider(
     providers: [
-      RepositoryProvider<TrendRepository>(
-        create: (context) => TrendRepository(),
+      RepositoryProvider<HomeRepository>(
+        create: (context) => HomeRepository(),
       ),
-      RepositoryProvider<RecommendRepository>(
-        create: (context) => RecommendRepository(),
-      ),
-      RepositoryProvider<CategoryRepository>(
-        create: (context) => CategoryRepository(),
-      ),
+      RepositoryProvider<GameRepository>(
+        create: (context) => GameRepository(),
+      )
     ],
     child: MultiBlocProvider(
       providers: [
         BlocProvider<TrendBloc>(
           create: (context) =>
-              TrendBloc(trendRepository: context.read<TrendRepository>()),
+              TrendBloc(homeRepository: context.read<HomeRepository>()),
         ),
         BlocProvider<RecommendBloc>(
-          create: (context) => RecommendBloc(
-              recommendRepository: context.read<RecommendRepository>()),
+          create: (context) =>
+              RecommendBloc(homeRepository: context.read<HomeRepository>()),
         ),
         BlocProvider<CategoryBloc>(
-          create: (context) => CategoryBloc(
-              categoryRepository: context.read<CategoryRepository>()),
+          create: (context) =>
+              CategoryBloc(homeRepository: context.read<HomeRepository>()),
         ),
         BlocProvider<HomeBloc>(
           create: (context) => HomeBloc(
@@ -39,7 +35,17 @@ void main() {
             recommendBloc: context.read<RecommendBloc>(),
             trendBloc: context.read<TrendBloc>(),
           )..add(HomeFetched()),
-        )
+        ),
+        BlocProvider<EditorChoiceBloc>(
+          create: (context) => EditorChoiceBloc(
+            gameRepository: context.read<GameRepository>(),
+          )..add(EditorChoiceFetched()),
+        ),
+        BlocProvider<TopFreeBloc>(
+          create: (context) => TopFreeBloc(
+            gameRepository: context.read<GameRepository>(),
+          )..add(TopFreeFetched()),
+        ),
       ],
       child: MyApp(),
     ),

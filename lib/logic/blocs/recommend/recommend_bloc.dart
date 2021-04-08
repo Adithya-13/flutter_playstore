@@ -10,10 +10,10 @@ part 'recommend_event.dart';
 part 'recommend_state.dart';
 
 class RecommendBloc extends Bloc<RecommendEvent, RecommendState> {
-  final RecommendRepository _recommendRepository;
+  final HomeRepository _homeRepository;
 
-  RecommendBloc({required RecommendRepository recommendRepository})
-      : _recommendRepository = recommendRepository,
+  RecommendBloc({required HomeRepository homeRepository})
+      : _homeRepository = homeRepository,
         super(RecommendLoading());
 
   @override
@@ -30,7 +30,7 @@ class RecommendBloc extends Bloc<RecommendEvent, RecommendState> {
     // yield RecommendLoading();
     try {
       RecommendEntity recommendEntity =
-          await _recommendRepository.getRecommendList();
+          await _homeRepository.getRecommendList();
       yield RecommendSuccess(recommendEntity: recommendEntity);
     } catch (e) {
       yield RecommendFailure(message: e.toString());

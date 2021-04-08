@@ -21,7 +21,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       required this.trendBloc})
       : super(HomeInitial());
 
-  List<BaseEntity> baseEntities = List<BaseEntity>.empty(growable: true);
+  List<HomeBaseEntity> baseEntities =
+      List<HomeBaseEntity>.empty(growable: true);
 
   @override
   Stream<Transition<HomeEvent, HomeState>> transformEvents(

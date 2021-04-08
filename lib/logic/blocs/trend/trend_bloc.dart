@@ -10,10 +10,10 @@ part 'trend_event.dart';
 part 'trend_state.dart';
 
 class TrendBloc extends Bloc<TrendEvent, TrendState> {
-  final TrendRepository _trendRepository;
+  final HomeRepository _homeRepository;
 
-  TrendBloc({required TrendRepository trendRepository})
-      : _trendRepository = trendRepository,
+  TrendBloc({required HomeRepository homeRepository})
+      : _homeRepository = homeRepository,
         super(TrendLoading());
 
   @override
@@ -28,7 +28,7 @@ class TrendBloc extends Bloc<TrendEvent, TrendState> {
   Stream<TrendState> _mapTrendFetchedToState(TrendFetched event) async* {
     // yield TrendLoading();
     try {
-      TrendEntity trendEntity = await _trendRepository.getTrendList();
+      TrendEntity trendEntity = await _homeRepository.getTrendList();
       yield TrendSuccess(trendEntity: trendEntity);
     } catch (e) {
       yield TrendFailure(message: e.toString());

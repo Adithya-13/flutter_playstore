@@ -19,12 +19,13 @@ class HomeFailure extends HomeState {
 }
 
 class HomeSuccess extends HomeState {
-  final List<BaseEntity>? baseEntities;
+  final List<HomeBaseEntity>? baseEntities;
   final bool? hasReachedMax;
 
   HomeSuccess({this.baseEntities, this.hasReachedMax});
 
-  HomeSuccess copyWith({List<BaseEntity>? baseEntities, bool? hasReachedMax}) {
+  HomeSuccess copyWith(
+      {List<HomeBaseEntity>? baseEntities, bool? hasReachedMax}) {
     return HomeSuccess(
         baseEntities: baseEntities ?? this.baseEntities,
         hasReachedMax: hasReachedMax ?? this.hasReachedMax);

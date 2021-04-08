@@ -15,10 +15,18 @@ class _BasePageState extends State<BasePage> {
     });
   }
 
+  List<Widget> bodyList = [
+    HomePage(),
+    GamePage(),
+    GamePage(),
+  ];
+
+  Widget getBody() => bodyList[currentPages];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HomePage(),
+      body: getBody(),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _changeCurrentPages,
         currentIndex: currentPages,

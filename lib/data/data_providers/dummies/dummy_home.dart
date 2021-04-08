@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_playstore/data/entities/entities.dart';
 
-class DummyData {
+class DummyHome {
   static TrendEntity getTrendList() => TrendEntity(trendEntities: [
         TrendItemEntity(
             preview:
