@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_playstore/logic/blocs/blocs.dart';
+import 'package:shimmer/shimmer.dart';
 
 class EditorChoiceSection extends StatelessWidget {
   const EditorChoiceSection({
@@ -65,10 +67,18 @@ class EditorChoiceSection extends StatelessWidget {
                                   Positioned.fill(
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                        state.editorChoiceEntity
+                                      child: CachedNetworkImage(
+                                        imageUrl: state.editorChoiceEntity
                                             .editorChoiceList[index].preview,
                                         fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            Shimmer.fromColors(
+                                          child: Container(
+                                            color: Colors.grey,
+                                          ),
+                                          baseColor: Colors.grey[300]!,
+                                          highlightColor: Colors.grey[100]!,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -98,12 +108,22 @@ class EditorChoiceSection extends StatelessWidget {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: Image.network(
-                                                  state
+                                                child: CachedNetworkImage(
+                                                  imageUrl: state
                                                       .editorChoiceEntity
                                                       .editorChoiceList[index]
                                                       .icon,
                                                   fit: BoxFit.cover,
+                                                  placeholder: (context, url) =>
+                                                      Shimmer.fromColors(
+                                                    child: Container(
+                                                      color: Colors.grey,
+                                                    ),
+                                                    baseColor:
+                                                        Colors.grey[300]!,
+                                                    highlightColor:
+                                                        Colors.grey[100]!,
+                                                  ),
                                                 ),
                                               ),
                                             ),

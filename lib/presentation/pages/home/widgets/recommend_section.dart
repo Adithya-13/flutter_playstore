@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_playstore/logic/blocs/blocs.dart';
+import 'package:shimmer/shimmer.dart';
 
 class RecommendSection extends StatelessWidget {
   @override
@@ -55,8 +57,30 @@ class RecommendSection extends StatelessWidget {
                         CircleAvatar(
                           radius: MediaQuery.of(context).size.width * 0.1,
                           backgroundColor: Colors.white,
-                          backgroundImage: NetworkImage(state
-                              .recommendEntity.recommendEntities[index].icon),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                MediaQuery.of(context).size.width * 0.1),
+                            child: CachedNetworkImage(
+                              imageUrl: state.recommendEntity
+                                  .recommendEntities[index].icon,
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                child: CircleAvatar(
+                                  radius:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        MediaQuery.of(context).size.width *
+                                            0.1),
+                                    child: Container(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                              ),
+                            ),
+                          ),
                         ),
                         SizedBox(height: 10),
                         Text(

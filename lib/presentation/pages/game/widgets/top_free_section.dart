@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_playstore/logic/blocs/blocs.dart';
+import 'package:shimmer/shimmer.dart';
 
 class TopFreeSection extends StatelessWidget {
   const TopFreeSection({
@@ -70,9 +72,18 @@ class TopFreeSection extends StatelessWidget {
                                 aspectRatio: 1,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    state.topFreeEntity.topFreeList[index].icon,
+                                  child: CachedNetworkImage(
+                                    imageUrl: state
+                                        .topFreeEntity.topFreeList[index].icon,
                                     fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        Shimmer.fromColors(
+                                      child: Container(
+                                        color: Colors.grey,
+                                      ),
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                    ),
                                   ),
                                 ),
                               ),
