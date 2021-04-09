@@ -21,7 +21,8 @@ class _DatePageState extends State<DatePage> {
           children: [
             GestureDetector(
               onTap: () {
-                _showDatePickerRangeCustom(dateRangeType: DateRangeType.START);
+                _showDatePickerRangeCustom(
+                    dateRangeType: DateRangeType.FLEXIBLE);
               },
               child: Text(checkIn.toString()),
             ),
@@ -40,22 +41,20 @@ class _DatePageState extends State<DatePage> {
   void _showDatePickerRangeCustom(
       {required DateRangeType dateRangeType}) async {
     final dateResult = await showCustomDateRangePicker(
-        context: context,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(DateTime.now().year + 1),
-        initialDateRange: DateTimeRange(
-          start: checkIn,
-          end: dateRangeType == DateRangeType.START ? checkIn : checkOut,
-        ),
-        dateRangeType: dateRangeType,
-        helpText: dateRangeType == DateRangeType.START
-            ? "SELECT DATE"
-            : "SELECT RANGE");
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 1),
+      initialDateRange: DateTimeRange(
+        start: checkIn,
+        end: checkOut,
+      ),
+      dateRangeType: dateRangeType,
+      builder: (context, child) => Theme(data: ThemeData.dark(), child: child!),
+    );
     setState(() {
-      if (dateRangeType == DateRangeType.START) {
+      if (dateRangeType == DateRangeType.FLEXIBLE) {
         checkIn = dateResult!.start;
-        checkOut = DateTime(dateResult.start.year, dateResult.start.month,
-            dateResult.start.day + 1);
+        checkOut = dateResult.end;
       } else if (dateRangeType == DateRangeType.RANGE) {
         checkOut = dateResult!.end;
       }

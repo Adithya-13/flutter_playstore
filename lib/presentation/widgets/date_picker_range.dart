@@ -738,7 +738,7 @@ class _DatePickerHeader extends StatelessWidget {
 ///  * [DateTimeRange], which is used to describe a date range.
 ///
 ///
-enum DateRangeType { START, RANGE, FLEXIBLE }
+enum DateRangeType { RANGE, FLEXIBLE }
 
 Future<DateTimeRange?> showCustomDateRangePicker({
   required BuildContext context,
@@ -1227,21 +1227,17 @@ class _CalendarRangePickerDialog extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          dateRangeType == DateRangeType.START
-                              ? Container()
-                              : Text(
-                                  ' – ',
-                                  style: startDateStyle,
-                                ),
+                          Text(
+                            ' – ',
+                            style: startDateStyle,
+                          ),
                           Flexible(
-                            child: dateRangeType == DateRangeType.START
-                                ? Container()
-                                : Text(
-                                    endDateText,
-                                    style: endDateStyle,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                            child: Text(
+                              endDateText,
+                              style: endDateStyle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
@@ -1434,35 +1430,12 @@ class _CalendarDateRangePickerState extends State<_CalendarDateRangePicker> {
             }
           }
           break;
-        case DateRangeType.START:
-          _startDate = date;
-          widget.onStartDateChanged?.call(_startDate!);
-          if (_endDate != null) {
-            _endDate = null;
-            widget.onEndDateChanged?.call(_endDate);
-          }
-          break;
         case DateRangeType.RANGE:
           if (_startDate != null && !date.isBefore(_startDate!)) {
             _endDate = date;
             widget.onEndDateChanged?.call(_endDate);
           }
           break;
-      }
-      if (_startDate != null &&
-          // _endDate == null &&
-          !date.isBefore(_startDate!)) {
-        print("1");
-        _endDate = date;
-        widget.onEndDateChanged?.call(_endDate);
-        // } else {
-        //   _startDate = date;
-        //   widget.onStartDateChanged?.call(_startDate!);
-        //   if (_endDate != null) {
-        //     print("2");
-        //     _endDate = null;
-        //     widget.onEndDateChanged?.call(_endDate);
-        //   }
       }
     });
   }
