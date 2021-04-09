@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_playstore/presentation/widgets/date_picker_range.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SearchField extends StatelessWidget {
@@ -9,8 +10,8 @@ class SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        showDateRangePicker(
+      onTap: () async {
+        final dateResult = await showCustomDateRangePicker(
           context: context,
           firstDate: DateTime(DateTime.now().day),
           lastDate: DateTime(DateTime.now().year + 1),
@@ -19,6 +20,7 @@ class SearchField extends StatelessWidget {
                 DateTime.now().year, DateTime.now().month, DateTime.now().day),
             end: DateTime.now(),
           ),
+          dateRangeType: DateRangeType.RANGE,
         );
       },
       child: Container(

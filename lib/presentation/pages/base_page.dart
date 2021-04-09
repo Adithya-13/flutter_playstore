@@ -18,7 +18,7 @@ class _BasePageState extends State<BasePage> {
   List<Widget> bodyList = [
     HomePage(),
     GamePage(),
-    GamePage(),
+    DatePage(),
   ];
 
   Widget getBody() => bodyList[currentPages];
