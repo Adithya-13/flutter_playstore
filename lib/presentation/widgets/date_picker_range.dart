@@ -5,10 +5,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart' show DragStartBehavior;
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart';
 
 const Size _calendarPortraitDialogSize = Size(330.0, 518.0);
 const Size _calendarLandscapeDialogSize = Size(496.0, 346.0);
@@ -1227,17 +1227,21 @@ class _CalendarRangePickerDialog extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            ' – ',
-                            style: startDateStyle,
-                          ),
+                          dateRangeType == DateRangeType.START
+                              ? Container()
+                              : Text(
+                                  ' – ',
+                                  style: startDateStyle,
+                                ),
                           Flexible(
-                            child: Text(
-                              endDateText,
-                              style: endDateStyle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            child: dateRangeType == DateRangeType.START
+                                ? Container()
+                                : Text(
+                                    endDateText,
+                                    style: endDateStyle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                           ),
                         ],
                       ),

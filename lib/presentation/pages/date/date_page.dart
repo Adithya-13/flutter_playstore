@@ -40,18 +40,22 @@ class _DatePageState extends State<DatePage> {
   void _showDatePickerRangeCustom(
       {required DateRangeType dateRangeType}) async {
     final dateResult = await showCustomDateRangePicker(
-      context: context,
-      firstDate: checkIn,
-      lastDate: DateTime(DateTime.now().year + 1),
-      initialDateRange: DateTimeRange(
-        start: checkIn,
-        end: checkIn,
-      ),
-      dateRangeType: dateRangeType,
-    );
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(DateTime.now().year + 1),
+        initialDateRange: DateTimeRange(
+          start: checkIn,
+          end: dateRangeType == DateRangeType.START ? checkIn : checkOut,
+        ),
+        dateRangeType: dateRangeType,
+        helpText: dateRangeType == DateRangeType.START
+            ? "SELECT DATE"
+            : "SELECT RANGE");
     setState(() {
       if (dateRangeType == DateRangeType.START) {
         checkIn = dateResult!.start;
+        checkOut = DateTime(dateResult.start.year, dateResult.start.month,
+            dateResult.start.day + 1);
       } else if (dateRangeType == DateRangeType.RANGE) {
         checkOut = dateResult!.end;
       }
